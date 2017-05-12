@@ -78,6 +78,7 @@ export default class Editable extends Component {
 		editor.on( 'nodechange', this.onNodeChange );
 		editor.on( 'keydown', this.onKeyDown );
 		editor.on( 'keyup', this.onKeyUp );
+		editor.on( 'blur', this.props.onBlur );
 		editor.on( 'selectionChange', this.onSelectionChange );
 		editor.on( 'PastePostProcess', this.onPastePostProcess );
 
