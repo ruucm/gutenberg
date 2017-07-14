@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { Component, createElement, Children, concatChildren } from 'element';
+import { Component, createElement, Children } from 'element';
 import { find } from 'lodash';
 import { __ } from 'i18n';
 
@@ -13,7 +13,7 @@ import { registerBlockType, query as hpq, createBlock } from '../../api';
 import Editable from '../../editable';
 import BlockControls from '../../block-controls';
 
-const { children, prop } = hpq;
+const { html, prop } = hpq;
 
 const fromBrDelimitedContent = ( content ) => {
 	if ( undefined === content ) {
@@ -71,7 +71,7 @@ registerBlockType( 'core/list', {
 
 	attributes: {
 		nodeName: prop( 'ol,ul', 'nodeName' ),
-		values: children( 'ol,ul' ),
+		values: html( 'ol,ul' ),
 	},
 
 	className: false,
@@ -94,7 +94,7 @@ registerBlockType( 'core/list', {
 				transform: ( { value, citation } ) => {
 					const listItems = fromBrDelimitedContent( value );
 					const values = citation
-						? concatChildren( listItems, <li>{ citation }</li> )
+						? listItems + `<li>${ citation }</li>`
 						: listItems;
 					return createBlock( 'core/list', {
 						nodeName: 'ul',
@@ -107,7 +107,7 @@ registerBlockType( 'core/list', {
 				matcher: ( node ) => node.nodeName === 'OL' || node.nodeName === 'UL',
 				attributes: {
 					nodeName: prop( 'ol,ul', 'nodeName' ),
-					values: children( 'ol,ul' ),
+					values: html( 'ol,ul' ),
 				},
 			},
 		],

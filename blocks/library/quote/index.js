@@ -18,7 +18,7 @@ import AlignmentToolbar from '../../alignment-toolbar';
 import BlockControls from '../../block-controls';
 import Editable from '../../editable';
 
-const { children, node, query } = hpq;
+const { html, node, query } = hpq;
 
 registerBlockType( 'core/quote', {
 	title: __( 'Quote' ),
@@ -27,7 +27,7 @@ registerBlockType( 'core/quote', {
 
 	attributes: {
 		value: query( 'blockquote > p', node() ),
-		citation: children( 'footer' ),
+		citation: html( 'footer' ),
 	},
 
 	defaultAttributes: {

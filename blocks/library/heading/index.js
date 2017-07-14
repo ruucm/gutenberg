@@ -7,7 +7,6 @@ import { isObject } from 'lodash';
  * WordPress dependencies
  */
 import { __, sprintf } from 'i18n';
-import { concatChildren } from 'element';
 import { Toolbar } from 'components';
 
 /**
@@ -21,7 +20,7 @@ import InspectorControls from '../../inspector-controls';
 import AlignmentToolbar from '../../alignment-toolbar';
 import BlockDescription from '../../block-description';
 
-const { children, prop } = query;
+const { html, prop } = query;
 
 registerBlockType( 'core/heading', {
 	title: __( 'Heading' ),
@@ -33,7 +32,7 @@ registerBlockType( 'core/heading', {
 	className: false,
 
 	attributes: {
-		content: children( 'h1,h2,h3,h4,h5,h6' ),
+		content: html( 'h1,h2,h3,h4,h5,h6' ),
 		nodeName: prop( 'h1,h2,h3,h4,h5,h6', 'nodeName' ),
 	},
 
@@ -77,7 +76,7 @@ registerBlockType( 'core/heading', {
 				type: 'raw',
 				matcher: ( node ) => /H\d/.test( node.nodeName ),
 				attributes: {
-					content: children( 'h1,h2,h3,h4,h5,h6' ),
+					content: html( 'h1,h2,h3,h4,h5,h6' ),
 					nodeName: prop( 'h1,h2,h3,h4,h5,h6', 'nodeName' ),
 				},
 			},
@@ -97,7 +96,7 @@ registerBlockType( 'core/heading', {
 
 	merge( attributes, attributesToMerge ) {
 		return {
-			content: concatChildren( attributes.content, attributesToMerge.content ),
+			content: attributes.content + attributesToMerge.content,
 		};
 	},
 
