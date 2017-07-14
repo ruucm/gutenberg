@@ -95,6 +95,11 @@ const config = {
 				use: 'babel-loader',
 			},
 			{
+				test: /\.js$/,
+				include: /node_modules\/react-traverse/,
+				use: 'babel-loader',
+			},
+			{
 				test: /block\.s?css$/,
 				include: [
 					/blocks/,
