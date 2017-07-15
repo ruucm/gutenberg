@@ -4,7 +4,7 @@
         "name": "core/latest-posts",
         "attributes": {
             "postsToShow": 5,
-            "displayPostDate": false
+            "displayPostDate": true
         }
     }
 ]
