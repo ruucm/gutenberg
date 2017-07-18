@@ -357,7 +357,7 @@ class VisualEditorBlock extends Component {
 				onMouseLeave={ onMouseLeave }
 				className={ wrapperClassname }
 				data-type={ block.name }
-				tabIndex="0"
+				tabIndex={ isValid ? 0 : -1 }
 				aria-label={ blockLabel }
 				{ ...wrapperProps }
 			>
