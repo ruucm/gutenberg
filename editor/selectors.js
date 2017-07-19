@@ -168,12 +168,12 @@ export function getEditedPostVisibility( state ) {
 }
 
 /**
- * Return true if the post being edited has already been published.
+ * Return true if the current post has already been published.
  *
  * @param  {Object}   state Global application state
  * @return {Boolearn}       Whether the post has been bublished
  */
-export function isEditedPostPublished( state ) {
+export function isCurrentPostPublished( state ) {
 	const post = getCurrentPost( state );
 
 	return [ 'publish', 'private' ].indexOf( post.status ) !== -1 ||
