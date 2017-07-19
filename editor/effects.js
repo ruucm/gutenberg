@@ -2,7 +2,7 @@
  * External dependencies
  */
 import { BEGIN, COMMIT, REVERT } from 'redux-optimist';
-import { get, uniqueId } from 'lodash';
+import { get, uniqueId, debounce } from 'lodash';
 
 /**
  * WordPress dependencies
@@ -14,12 +14,23 @@ import { __ } from 'i18n';
  * Internal dependencies
  */
 import { getGutenbergURL, getWPAdminURL } from './utils/url';
-import { focusBlock, replaceBlocks, createSuccessNotice, createErrorNotice } from './actions';
+import {
+	focusBlock,
+	replaceBlocks,
+	createSuccessNotice,
+	createErrorNotice,
+	autosave,
+	queueAutosave,
+	savePost,
+} from './actions';
 import {
 	getCurrentPost,
 	getCurrentPostType,
 	getBlocks,
 	getPostEdits,
+	isEditedPostDirty,
+	isEditedPostPublished,
+	isEditedPostSaveable,
 } from './selectors';
 
 export default {
@@ -210,4 +221,28 @@ export default {
 			]
 		) );
 	},
+	AUTOSAVE( action, store ) {
+		const { dispatch, getState } = store;
+		const state = getState();
+		if ( ! isEditedPostSaveable( state ) || ! isEditedPostDirty( state ) ) {
+			return;
+		}
+
+		if ( isEditedPostPublished( state ) ) {
+			// TODO: Publish autosave
+		} else {
+			dispatch( savePost() );
+		}
+	},
+	QUEUE_AUTOSAVE: debounce( ( action, store ) => {
+		store.dispatch( autosave() );
+	}, 10000 ),
+	UPDATE_BLOCK_ATTRIBUTES: () => queueAutosave(),
+	INSERT_BLOCKS: () => queueAutosave(),
+	MOVE_BLOCKS_DOWN: () => queueAutosave(),
+	MOVE_BLOCKS_UP: () => queueAutosave(),
+	REPLACE_BLOCKS: () => queueAutosave(),
+	REMOVE_BLOCKS: () => queueAutosave(),
+	EDIT_POST: () => queueAutosave(),
+	MARK_DIRTY: () => queueAutosave(),
 };

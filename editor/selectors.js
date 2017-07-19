@@ -181,6 +181,26 @@ export function isCurrentPostPublished( state ) {
 }
 
 /**
+ * Return true if the post being edited has already been published.
+ *
+ * @param  {Object}   state Global application state
+ * @return {Boolearn}       Whether the post has been bublished
+ */
+export function isEditedPostPublished( state ) {
+	const status = getEditedPostAttribute( state, 'status' );
+	if ( 'publish' === status || 'private' === status ) {
+		return true;
+	}
+
+	const date = getEditedPostAttribute( state, 'date' );
+	if ( 'future' === status && moment( date ).isBefore( moment() ) ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
  * Return true if the post being edited can be published
  *
  * @param  {Object}   state Global application state

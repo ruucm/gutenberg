@@ -21,6 +21,7 @@ import {
 	getEditedPostExcerpt,
 	getEditedPostVisibility,
 	isCurrentPostPublished,
+	isEditedPostPublished,
 	isEditedPostPublishable,
 	isEditedPostSaveable,
 	isEditedPostBeingScheduled,
@@ -387,6 +388,76 @@ describe( 'selectors', () => {
 			};
 
 			expect( isCurrentPostPublished( state ) ).toBe( true );
+		} );
+	} );
+
+	describe( 'isEditedPostPublished', () => {
+		it( 'should return true for public posts', () => {
+			const state = {
+				currentPost: {
+					status: 'publish',
+				},
+				editor: {
+					edits: {},
+				},
+			};
+
+			expect( isEditedPostPublished( state ) ).toBe( true );
+		} );
+
+		it( 'should return true for private posts', () => {
+			const state = {
+				currentPost: {
+					status: 'private',
+				},
+				editor: {
+					edits: {},
+				},
+			};
+
+			expect( isEditedPostPublished( state ) ).toBe( true );
+		} );
+
+		it( 'should return false for draft posts', () => {
+			const state = {
+				currentPost: {
+					status: 'draft',
+				},
+				editor: {
+					edits: {},
+				},
+			};
+
+			expect( isEditedPostPublished( state ) ).toBe( false );
+		} );
+
+		it( 'should return true for old scheduled posts', () => {
+			const state = {
+				currentPost: {
+					status: 'future',
+					date: '2016-05-30T17:21:39',
+				},
+				editor: {
+					edits: {},
+				},
+			};
+
+			expect( isEditedPostPublished( state ) ).toBe( true );
+		} );
+
+		it( 'should prefer edited value', () => {
+			const state = {
+				currentPost: {
+					status: 'publish',
+				},
+				editor: {
+					edits: {
+						status: 'draft',
+					},
+				},
+			};
+
+			expect( isEditedPostPublished( state ) ).toBe( false );
 		} );
 	} );
 
