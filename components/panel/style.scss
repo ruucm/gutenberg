@@ -77,3 +77,14 @@
 .components-panel__body-toggle-icon {
 	margin-right: -5px;
 }
+
+.components-panel__row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-top: 20px;
+
+	&:empty {
+		padding-top: 0;
+	}
+}
