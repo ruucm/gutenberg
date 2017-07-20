@@ -141,16 +141,24 @@ describe( 'selectors', () => {
 	describe( 'isEditedPostNew', () => {
 		it( 'should return true when the post is new', () => {
 			const state = {
-				currentPost: {},
+				currentPost: {
+					status: 'auto-draft',
+				},
+				editor: {
+					edits: {},
+				},
 			};
 
 			expect( isEditedPostNew( state ) ).toBe( true );
 		} );
 
-		it( 'should return false when the post has an ID', () => {
+		it( 'should return false when the post is not new', () => {
 			const state = {
 				currentPost: {
-					id: 1,
+					status: 'draft',
+				},
+				editor: {
+					edits: {},
 				},
 			};
 
