@@ -500,35 +500,41 @@ function gutenberg_editor_scripts_and_styles( $hook ) {
 	// Now load the `word-count` script from core.
 	wp_enqueue_script( 'word-count' );
 
-	// Parse post type from parameters
+	// Parse post type from parameters.
 	$post_type = null;
 	if ( ! isset( $_GET['post_type'] ) ) {
 		$post_type = 'post';
-	} elseif ( in_array( $_GET['post_type'], get_post_types( array( 'show_ui' => true ) ) ) ) {
-		$post_type = $_GET['post_type'];
 	} else {
-		wp_die( __( 'Invalid post type.' ) );
+		$post_types = get_post_types( array(
+			'show_ui' => true,
+		) );
+
+		if ( in_array( $_GET['post_type'], $post_types ) ) {
+			$post_type = $_GET['post_type'];
+		} else {
+			wp_die( __( 'Invalid post type.', 'gutenberg' ) );
+		}
 	}
 
-	// Parse post ID from parameters
+	// Parse post ID from parameters.
 	$post_id = null;
 	if ( isset( $_GET['post_id'] ) && (int) $_GET['post_id'] > 0 ) {
 		$post_id = (int) $_GET['post_id'];
 	}
 
-	// Create an auto-draft if new post
+	// Create an auto-draft if new post.
 	if ( ! $post_id ) {
 		$default_post_to_edit = get_default_post_to_edit( $post_type, true );
 		$post_id = $default_post_to_edit->ID;
 	}
 
-	// Generate API-prepared post from post ID
+	// Generate API-prepared post from post ID.
 	$post_to_edit = gutenberg_get_post_to_edit( $post_id );
 	if ( is_wp_error( $post_to_edit ) ) {
 		wp_die( $post_to_edit->get_error_message() );
 	}
 
-	// Set initial title to empty string for auto draft for duration of edit
+	// Set initial title to empty string for auto draft for duration of edit.
 	if ( 'auto-draft' === $post_to_edit['status'] ) {
 		$default_title = apply_filters( 'default_title', '' );
 		$post_to_edit['title'] = array(
@@ -537,13 +543,13 @@ function gutenberg_editor_scripts_and_styles( $hook ) {
 		);
 	}
 
-	// Initialize the post data
+	// Initialize the post data.
 	wp_add_inline_script(
 		'wp-editor',
 		'window._wpGutenbergPost = ' . wp_json_encode( $post_to_edit ) . ';'
 	);
 
-	// Prepopulate with some test content in demo
+	// Prepopulate with some test content in demo.
 	if ( $is_demo ) {
 		wp_add_inline_script(
 			'wp-editor',
@@ -565,7 +571,9 @@ function gutenberg_editor_scripts_and_styles( $hook ) {
 	/**
 	 * Scripts
 	 */
-	wp_enqueue_media( array( 'post' => $post_to_edit['id'] ) );
+	wp_enqueue_media( array(
+		'post' => $post_to_edit['id'],
+	) );
 	wp_enqueue_editor();
 
 	/**
